@@ -1,9 +1,0 @@
-name: Super-Linter
-
-on: push
-
-jobs:
-  test-job:
-    steps:
-      - name: shell test
-        run: echo test
