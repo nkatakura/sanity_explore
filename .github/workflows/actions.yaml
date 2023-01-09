@@ -15,3 +15,8 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+# create new instances using terraform or cloudformation?
+# ssh into new instances
+# clone down specific branch
+# start the node server

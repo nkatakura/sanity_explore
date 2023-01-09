@@ -24,3 +24,5 @@
 
 # Typescript
 *.tsbuildinfo
+
+/Terraform/AWS_Credentials_setup.sh
