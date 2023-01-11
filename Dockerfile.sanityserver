@@ -1,0 +1,11 @@
+FROM node:19-alpine3.16
+
+WORKDIR /app
+
+COPY Sanity /app
+
+RUN npm install
+
+# export SANITY_CONTAINER_VERSION=0.0
+
+# build using: docker build -t sanity-server:$SANITY_CONTAINER_VERSION -f Dockerfile.sanityserver .
