@@ -1,9 +1,11 @@
 name: Gitlab Actions
 on: push
 jobs:
-  test-job:
+  terraform-sanity-server:
     runs-on: ubuntu-latest
     steps:
+      - name: HashiCorp - Setup Terraform
+      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1
       - uses: actions/checkout@v3
       - run: cd Terraform
       - run: ls -al
