@@ -4,8 +4,7 @@ jobs:
   test-job:
     runs-on: ubuntu-latest
     steps:
-      - run: echo $AWS_ACCESS_KEY_ID
-      - run: echo $AWS_SECRET_ACCESS_KEY
+      - run: terraform apply
 
 
 # create new instances using terraform or cloudformation?
