@@ -20,7 +20,7 @@ jobs:
       - name: building sanity container
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: sanity-server
+          ECR_REPOSITORY: sanity_server
           IMAGE_TAG: 1.0.${{ github.run_number }}
         
         run: | 
