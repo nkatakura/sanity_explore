@@ -6,6 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: cd Terraform
+      - run: ls -al
       - run: terraform init
       - run: terraform apply
 
