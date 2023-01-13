@@ -5,9 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: HashiCorp - Setup Terraform
-      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1
       - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1
       - run: cd Terraform
       - run: ls -al
       - run: terraform init
