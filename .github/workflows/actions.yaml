@@ -3,18 +3,30 @@ on: push
 jobs:
   terraform-sanity-server:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: ${{ inputs.tfpath }} 
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1
-      - name: settup up AWS creds
-        run: | 
-          export AWS_ACCESS_KEY_ID
-          export AWS_SECRET_ACCESS_KEY
-          export AWS_DEFAULT_REGION="us-east-1"
+      - name: Configure AWS Credentials Action For GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       - name: terraform init
         working-directory: ./Terraform
-        run: terraform init
+        run: |
+          echo "** Running Terraform Init**"
+          terraform init
+
+          echo "** Running Terraform Validate**"
+          terraform validate
+
+          echo "** Running Terraform Plan**"
+          terraform plan
+
+          echo "** Running Terraform Apply**"
+          terraform apply -auto-approve
       - name: terraform apply
         working-directory: ./Terraform
         run: terraform apply
