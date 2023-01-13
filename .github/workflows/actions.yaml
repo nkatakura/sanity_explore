@@ -4,6 +4,7 @@ jobs:
   test-job:
     runs-on: ubuntu-latest
     steps:
+      - run: cd Terraform
       - run: terraform apply
 
 
