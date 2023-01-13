@@ -14,10 +14,11 @@ jobs:
           aws-region: us-east-1
         
       - name: building sanity container
-        run: docker build -t sanity-server/version${{ github.run_number }} -f Dockerfile.sanityserver .
+        run: docker build -t sanity-server -f Dockerfile.sanityserver .
       
       - name: pushing sanity container to ECR
-        run: docker push tag version${{ github.run_number }} ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.us-east-1.amazonaws.com/sanity-server
+        run: docker tag sanity-server ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.us-east-1.amazonaws.com/sanity-server:1.0.${{ github.run_number }}
+        run: docker push ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.us-east-1.amazonaws.com/sanity-server:1.0.${{ github.run_number }}
 
   terraform-sanity-server:
     if: github.ref == 'refs/heads/main'
