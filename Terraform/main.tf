@@ -22,6 +22,7 @@ resource "aws_instance" "app_server" {
   }
 }
 
+# Data source for grabbing the latest Amazon linux AMI ID
 data "aws_ami" "amzLinux" {
   most_recent = true
   owners      = ["amazon"]

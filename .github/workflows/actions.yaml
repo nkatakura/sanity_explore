@@ -1,6 +1,26 @@
 name: github Actions
 on: push
 jobs:
+  sanity-server-container-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate build number
+        uses: einaregilsson/build-number@v3
+        with:
+        token: ${{secrets.github_token}}  
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials action
+        uses: aws-actions/configure-aws-credentials@v1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+        
+      - name: building sanity container
+        run: docker build -t sanity-server:$BUILD_NUMBER -f Dockerfile.sanityserver .
+      
+      - name: pushing sanity container to ECR
+        run: docker push ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.us-east-1.amazonaws.com/sanity-server
+
   terraform-sanity-server:
     runs-on: ubuntu-latest
     steps:
@@ -12,6 +32,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+      
       - name: terraform init
         working-directory: ./Terraform
         run: |
@@ -26,9 +47,12 @@ jobs:
 
           echo "** Running Terraform Apply**"
           terraform apply -auto-approve
+        
       - name: terraform apply
         working-directory: ./Terraform
         run: terraform apply
+      
+      - name: 
 
 
 # create new instances using terraform or cloudformation?
