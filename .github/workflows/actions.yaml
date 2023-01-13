@@ -4,11 +4,6 @@ jobs:
   sanity-server-container-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate build number
-        uses: einaregilsson/build-number@v3
-        with:
-          token: ${{secrets.github_token}}
-
       - uses: actions/checkout@v3
 
       - name: Configure AWS credentials
@@ -19,7 +14,7 @@ jobs:
           aws-region: us-east-1
         
       - name: building sanity container
-        run: docker build -t sanity-server:$BUILD_NUMBER -f Dockerfile.sanityserver .
+        run: docker build -t sanity-server:$GITHUB_RUN_NUMBER -f Dockerfile.sanityserver .
       
       - name: pushing sanity container to ECR
         run: docker push ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.us-east-1.amazonaws.com/sanity-server
