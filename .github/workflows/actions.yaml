@@ -7,8 +7,10 @@ jobs:
       - name: Generate build number
         uses: einaregilsson/build-number@v3
         with:
-          token: ${{secrets.github_token}}  
+          token: ${{secrets.github_token}}
+
       - uses: actions/checkout@v3
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -52,9 +54,6 @@ jobs:
       - name: terraform apply
         working-directory: ./Terraform
         run: terraform apply
-      
-      - name: 
-
 
 # create new instances using terraform or cloudformation?
 # ssh into new instances
