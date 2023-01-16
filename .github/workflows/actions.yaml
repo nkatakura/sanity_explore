@@ -1,7 +1,10 @@
 name: github Actions
 on: push
 jobs:
+
+  # Builds sanity server docker container and pushes to ECR
   sanity-server-container-build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +30,7 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.sanityserver .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+  # Uses terraform to spin up sanity studio server instance
   terraform-sanity-server:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -53,13 +57,13 @@ jobs:
           terraform plan
 
           echo "** Running Terraform Apply**"
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var="instance_name=sanity-studio-server"
         
       - name: terraform apply
         working-directory: ./Terraform
         run: terraform apply
 
-# create new instances using terraform or cloudformation?
-# ssh into new instances
-# clone down specific branch
-# start the node server
+# steps if branch name is not 'main'
+# terraform to create guest instance
+# build + push guest server container
+# start guest server container
