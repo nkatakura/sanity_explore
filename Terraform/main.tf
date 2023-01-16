@@ -14,36 +14,10 @@ provider "aws" {
 }
 
 resource "aws_instance" "app_server" {
-  ami           = data.aws_ami.amzLinux.id
+  ami           = "ami-0f471beb65a945e41"
   instance_type = "t2.micro"
 
   tags = {
     Name = var.instance_name
-  }
-}
-
-# Data source for grabbing the latest Amazon linux AMI ID
-data "aws_ami" "amzLinux" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name      = "name"
-    values    = ["amzn2-ami-hvm-*-gp2"]
-  }
-
-  filter {
-    name      = "root-device-type"
-    values    = ["ebs"]
-  }
-
-  filter {
-    name      = "virtualization-type"
-    values    = ["hvm"]
-  }
-
-  filter {
-      name    = "architecture"
-      values  = ["x86_64"]
   }
 }
