@@ -32,7 +32,7 @@ jobs:
 
   # Uses terraform to spin up sanity studio server instance
   terraform-sanity-server:
-    if: github.ref != 'refs/heads/main' || github.ref != 'refs/heads/test'
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -44,9 +44,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: terraform init
         working-directory: ./Terraform
-        run: aws ec2 describe-instances --filters "Name=tag:${GITHUB_REF#refs/heads/},Values=MyInstance"
+        run: aws ec2 describe-instances --filters "Name=tag:${{ steps.extract_branch.outputs.branch }},Values=MyInstance"
 
           # echo "** Running Terraform Init**"
           # terraform init
