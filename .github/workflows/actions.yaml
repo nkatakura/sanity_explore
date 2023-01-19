@@ -63,13 +63,8 @@ jobs:
             echo "** Running Terraform Validate**"
             terraform validate
 
-<<<<<<< HEAD
             echo "** Running Terraform Plan**"
             terraform plan
-=======
-          echo "** Running Terraform Apply**"
-          terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
->>>>>>> 2817441fc920289dc21d8376f023ba2799a16931
 
             echo "** Running Terraform Apply**"
             terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
