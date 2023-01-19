@@ -61,11 +61,13 @@ jobs:
           # echo "** Running Terraform Apply**"
           # terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
 
-      - name: terraform init
+      - name: check instance existance then terraform apply
+        shell: bash
         working-directory: ./Terraform
         run: | 
-          aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}"
-          echo $?
-
-          aws ec2 describe-instances --filters "Name=tag:Name,Values=dsfsf"
-          echo $?
+          if [ aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}" | grep InstanceId ]
+          then
+            echo found
+          else
+            echo not found
+          fi
