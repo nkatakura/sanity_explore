@@ -4,7 +4,6 @@ jobs:
 
   # Builds sanity server docker container and pushes to ECR
   sanity-server-container-build:
-    if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,19 +19,24 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: building sanity container
+      - name: setting envs for ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: sanity_server
           IMAGE_TAG: 1.0.${{ github.run_number }}
-        
+
+      - name: building and pushing docker image
+        if: github.ref == 'refs/heads/test'
         run: | 
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.sanityserver .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: SSH to sanity studio server
+
+
   # Uses terraform to spin up sanity studio server instance
   terraform-sanity-server:
-    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/test' && github.ref != 'refs/heads/github_actions'
+    if: github.ref != 'refs/heads/test' && github.ref != 'refs/heads/github_actions'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
