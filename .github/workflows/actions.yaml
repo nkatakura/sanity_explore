@@ -4,7 +4,7 @@ jobs:
 
   # Builds sanity server docker container and pushes to ECR
   sanity-server-container-build:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
 
   # Uses terraform to spin up sanity studio server instance
   terraform-sanity-server:
-    if: github.ref != 'refs/heads/main' || github.ref != 'refs/heads/test'
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/test' && github.ref != 'refs/heads/github_actions'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -44,22 +44,33 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       
-      - name: terraform init
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: check instance existance then terraform apply
+        shell: bash
         working-directory: ./Terraform
-        run: |
-          echo "** Running Terraform Init**"
-          terraform init
+        run: | 
+          if aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}" | grep InstanceId
+          then
+            echo instance found, skipping terraform
+          else
+            echo "** Running Terraform Init**"
+            terraform init
 
-          echo "** Running Terraform Validate**"
-          terraform validate
+            echo "** Running Terraform Validate**"
+            terraform validate
 
-          echo "** Running Terraform Plan**"
-          terraform plan
-
+<<<<<<< HEAD
+            echo "** Running Terraform Plan**"
+            terraform plan
+=======
           echo "** Running Terraform Apply**"
           terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
+>>>>>>> 2817441fc920289dc21d8376f023ba2799a16931
 
-# steps if branch name is not 'main'
-# terraform to create guest instance
-# build + push guest server container
-# start guest server container
+            echo "** Running Terraform Apply**"
+            terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
+          fi
