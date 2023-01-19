@@ -65,7 +65,7 @@ jobs:
         shell: bash
         working-directory: ./Terraform
         run: | 
-          if [ aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}" | grep InstanceId ]
+          if aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}" | grep InstanceId
           then
             echo found
           else
