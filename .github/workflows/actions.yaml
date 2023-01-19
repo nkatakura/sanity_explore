@@ -49,10 +49,6 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
-      - name: terraform init
-        working-directory: ./Terraform
-        run: aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}"
-
           # echo "** Running Terraform Init**"
           # terraform init
 
@@ -64,3 +60,12 @@ jobs:
 
           # echo "** Running Terraform Apply**"
           # terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
+
+      - name: terraform init
+        working-directory: ./Terraform
+        run: | 
+          aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}"
+          echo $?
+
+          aws ec2 describe-instances --filters "Name=tag:Name,Values=dsfsf"
+          echo $?
