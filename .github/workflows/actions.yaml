@@ -46,20 +46,16 @@ jobs:
       
       - name: terraform init
         working-directory: ./Terraform
-        run: |
-          echo "** Running Terraform Init**"
-          terraform init
+        run: aws ec2 describe-instances --filters "Name=tag:${GITHUB_REF#refs/heads/},Values=MyInstance"
 
-          echo "** Running Terraform Validate**"
-          terraform validate
+          # echo "** Running Terraform Init**"
+          # terraform init
 
-          echo "** Running Terraform Plan**"
-          terraform plan
+          # echo "** Running Terraform Validate**"
+          # terraform validate
 
-          echo "** Running Terraform Apply**"
-          terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
+          # echo "** Running Terraform Plan**"
+          # terraform plan
 
-# steps if branch name is not 'main'
-# terraform to create guest instance
-# build + push guest server container
-# start guest server container
+          # echo "** Running Terraform Apply**"
+          # terraform apply -auto-approve -var="instance_name=${GITHUB_REF#refs/heads/}"
