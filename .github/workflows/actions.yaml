@@ -58,10 +58,6 @@ jobs:
 
           echo "** Running Terraform Apply**"
           terraform apply -auto-approve -var="instance_name=sanity-studio-server"
-        
-      - name: terraform apply
-        working-directory: ./Terraform
-        run: terraform apply
 
 # steps if branch name is not 'main'
 # terraform to create guest instance
