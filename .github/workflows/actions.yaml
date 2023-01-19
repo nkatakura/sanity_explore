@@ -4,7 +4,7 @@ jobs:
 
   # Builds sanity server docker container and pushes to ECR
   sanity-server-container-build:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
 
       - name: terraform init
         working-directory: ./Terraform
-        run: aws ec2 describe-instances --filters "Name=tag:${{ steps.extract_branch.outputs.branch }},Values=MyInstance"
+        run: aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.extract_branch.outputs.branch }}"
 
           # echo "** Running Terraform Init**"
           # terraform init
