@@ -8,6 +8,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -28,8 +34,9 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: SSH to sanity studio server
-        run: echo ssh stuff here
-
+        run: |
+          ssh-keyscan -H 54.173.98.252
+ 
 
   # Uses terraform to spin up sanity studio server instance
   terraform-sanity-server:
