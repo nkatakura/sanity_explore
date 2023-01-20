@@ -3,7 +3,7 @@ on: push
 jobs:
 
   # Builds sanity server docker container and pushes to ECR
-  sanity-server-container-build:
+  sanity-server-container-build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-        uses: aws-actions/amazon-ecr-login@v1
+        
+      - uses: aws-actions/amazon-ecr-login@v1
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: sanity_server
