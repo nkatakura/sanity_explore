@@ -22,15 +22,15 @@ jobs:
           IMAGE_TAG: 1.0.${{ github.run_number }}
 
       - name: building and pushing docker image
-        if: github.ref == 'refs/heads/test'
         run: | 
+          echo $ECR_REGISTRY
+          echo $IMAGE_TAG
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.sanityserver .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: SSH to sanity studio server and deploy
         uses: appleboy/ssh-action@master
         env:
-          TEST: "TEST_VARIABLE"
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: 1.0.${{ github.run_number }}
         with:
@@ -41,7 +41,12 @@ jobs:
           script: |
             bash docker_cleanup.sh
 
-            echo $TEST
+            echo $ECR_REGISTRY
+            echo $IMAGE_TAG
+
+            docker pull $ECR_REGISTRY/sanity_server:$IMAGE_TAG
+
+            docker run $ECR_REGISTRY/sanity_server:$IMAGE_TAG -p 8080:3333
 
 
 
