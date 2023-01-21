@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
+          envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG,TEST
           script: |
             bash docker_cleanup.sh
 
