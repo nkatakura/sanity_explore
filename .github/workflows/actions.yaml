@@ -29,6 +29,10 @@ jobs:
 
       - name: SSH to sanity studio server and deploy
         uses: appleboy/ssh-action@master
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: sanity_server
+          IMAGE_TAG: 1.0.${{ github.run_number }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ec2-user
