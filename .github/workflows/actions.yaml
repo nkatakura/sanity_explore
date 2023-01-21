@@ -16,10 +16,7 @@ jobs:
           aws-region: us-east-1
         
       - uses: aws-actions/amazon-ecr-login@v1
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: sanity_server
-          IMAGE_TAG: 1.0.${{ github.run_number }}
+        id: login-ecr
 
       - name: building and pushing docker image
         env:
