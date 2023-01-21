@@ -27,10 +27,17 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.sanityserver .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: SSH to sanity studio server
+      - name: SSH to sanity studio server and deploy
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${{ secrets.SSH_HOST }}
+
+          docker stop $(docker ps -a -q)
+          docker rm $(docker ps -a -q)
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -p 8080:3333
+
 
 
   # Uses terraform to spin up sanity studio server instance
