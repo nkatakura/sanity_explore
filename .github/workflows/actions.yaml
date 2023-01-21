@@ -28,13 +28,15 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: SSH to sanity studio server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: "3.90.65.223"
-          username: ec2-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            pwd
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${{ secrets.SSH_HOST }}
+
+          docker ps -aq | xargs docker stop | xargs docker rm
+          
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -p 8080:3333
 
 
 
