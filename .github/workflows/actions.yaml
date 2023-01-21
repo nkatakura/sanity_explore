@@ -42,7 +42,7 @@ jobs:
 
             docker pull $ECR_REGISTRY/sanity_server:$IMAGE_TAG
 
-            docker run -d -p 8080:3333 $ECR_REGISTRY/sanity_server:$IMAGE_TAG
+            docker run -d -p 80:3333 $ECR_REGISTRY/sanity_server:$IMAGE_TAG
 
 
 
