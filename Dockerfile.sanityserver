@@ -6,6 +6,6 @@ COPY Sanity /app
 
 RUN npm install
 
-# export SANITY_CONTAINER_VERSION=0.0
+EXPOSE 8080
 
-# build using: docker build -t sanity-server -f Dockerfile.sanityserver .
+CMD ["npm", "run", "dev"]
