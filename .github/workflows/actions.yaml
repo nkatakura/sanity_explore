@@ -35,7 +35,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
           script: |
-            docker ps -aq | xargs docker stop | xargs docker rm
+            if [[ $(docker container list -qa) ]]; then
+              docker stop $(docker ps -a -q)
+              docker rm $(docker ps -a -q)
+            else
+	            echo "no containers - skipping cleanup"
+            fi
 
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
